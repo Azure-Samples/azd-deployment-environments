@@ -29,3 +29,6 @@ resource keyVaultSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
 }
+
+output secretIdentifier string = keyVaultSecret.id
+output secretUri string = keyVaultSecret.properties.secretUri

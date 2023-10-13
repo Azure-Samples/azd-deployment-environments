@@ -1,0 +1,67 @@
+environmentTypes:
+  - name: Dev
+    tags:
+      env: dev
+  - name: Test
+    tags:
+      env: test
+  - name: Prod
+    tags:
+      env: prod
+catalogs:
+  - name: Example
+    repo: https://github.com/Azure/deployment-environments.git
+    branch: main
+    path: /Environments
+projects:
+  - name: Project-1
+    environmentTypes:
+      - name: Dev
+        deploymentTargetId: null
+        roles: ["Owner"]
+        tags:
+          project: Project-1
+      - name: Test
+        deploymentTargetId: null
+        roles: ["Contributor"]
+        tags:
+          project: Project-1
+      - name: Prod
+        deploymentTargetId: null
+        roles: ["Reader"]
+        tags:
+          project: Project-1
+  - name: Project-2
+    environmentTypes:
+      - name: Dev
+        deploymentTargetId: null
+        roles: ["Owner"]
+        tags:
+          project: Project-2
+      - name: Test
+        deploymentTargetId: null
+        roles: ["Contributor"]
+        tags:
+          project: Project-2
+      - name: Prod
+        deploymentTargetId: null
+        roles: ["Reader"]
+        tags:
+          project: Project-2
+  - name: Project-3
+    environmentTypes:
+      - name: Dev
+        deploymentTargetId: null
+        roles: ["Owner"]
+        tags:
+          project: Project-3
+      - name: Test
+        deploymentTargetId: null
+        roles: ["Contributor"]
+        tags:
+          project: Project-3
+      - name: Prod
+        deploymentTargetId: null
+        roles: ["Reader"]
+        tags:
+          project: Project-3

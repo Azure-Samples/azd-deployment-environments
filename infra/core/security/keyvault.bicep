@@ -4,6 +4,7 @@ param location string = resourceGroup().location
 param tags object = {}
 
 param principalId string = ''
+param permissions object = {}
 
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: name
@@ -15,7 +16,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     accessPolicies: !empty(principalId) ? [
       {
         objectId: principalId
-        permissions: { secrets: [ 'get', 'list' ] }
+        permissions: empty(permissions) ? { secrets: [ 'get', 'list' ] } : permissions
         tenantId: subscription().tenantId
       }
     ] : []
