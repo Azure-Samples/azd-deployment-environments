@@ -16,6 +16,8 @@ param config devCenterConfig
 @description('The tags to apply to the dev center')
 param tags object = {}
 
+param principalId string = ''
+
 @secure()
 @description('The personal access token to use to access the catalog')
 param catalogToken string
@@ -29,6 +31,7 @@ type devCenterConfig = {
 type project = {
   name: string
   environmentTypes: projectEnvironmentType[]
+  members: string[]?
 }
 
 type catalog = {
@@ -69,13 +72,14 @@ module devCenterEnvType 'devcenter-environment-type.bicep' = [for envType in con
 }]
 
 module devCenterProject 'project.bicep' = [for project in config.projects: {
-  name: '${devcenter.name}-catalog-${project.name}'
+  name: '${devcenter.name}-project-${project.name}'
   params: {
     name: project.name
     location: location
     tags: tags
     devCenterName: devcenter.name
     environmentTypes: project.environmentTypes
+    members: [principalId]
   }
 }]
 
@@ -121,18 +125,10 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
       {
         categoryGroup: 'audit'
         enabled: true
-        retentionPolicy: {
-          enabled: true
-          days: 30
-        }
       }
       {
         categoryGroup: 'allLogs'
         enabled: true
-        retentionPolicy: {
-          enabled: true
-          days: 30
-        }
       }
     ]
   }

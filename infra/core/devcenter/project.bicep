@@ -7,6 +7,8 @@ param name string
 @description('The environment types to create')
 param environmentTypes environmentType[]
 
+param members string[]
+
 @description('The location of the resource')
 param location string = resourceGroup().location
 
@@ -42,5 +44,13 @@ module projectEnvType 'project-environment-type.bicep' = [for envType in environ
     location: location
     tags: envType.tags == null ? {} : envType.tags
     roles: envType.roles == null ? [] : envType.roles
+  }
+}]
+
+module memberAccess 'project-access.bicep' = [for member in members: {
+  name: '${project.name}-member-${member}'
+  params: {
+    projectName: project.name
+    principalId: member
   }
 }]

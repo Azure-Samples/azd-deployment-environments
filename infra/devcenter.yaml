@@ -15,6 +15,7 @@ catalogs:
     path: /Environments
 projects:
   - name: Project-1
+    members: null
     environmentTypes:
       - name: Dev
         deploymentTargetId: null
@@ -32,6 +33,7 @@ projects:
         tags:
           project: Project-1
   - name: Project-2
+    members: null
     environmentTypes:
       - name: Dev
         deploymentTargetId: null
@@ -49,6 +51,7 @@ projects:
         tags:
           project: Project-2
   - name: Project-3
+    members: null
     environmentTypes:
       - name: Dev
         deploymentTargetId: null

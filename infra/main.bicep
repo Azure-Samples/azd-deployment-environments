@@ -55,6 +55,7 @@ module devcenter 'core/devcenter/devcenter.bicep' = {
     catalogToken: catalogToken
     keyVaultName: keyVault.outputs.name
     logWorkspaceName: logging.outputs.name
+    principalId: principalId
   }
 }
 
