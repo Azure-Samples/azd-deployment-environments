@@ -4,9 +4,6 @@ param name string
 @description('The name of the key vault to store secrets in')
 param keyVaultName string
 
-@description('The name of the log analytics workspace to send logs to')
-param logWorkspaceName string
-
 @description('The location to deploy the dev center to')
 param location string = resourceGroup().location
 
@@ -16,11 +13,15 @@ param config devCenterConfig
 @description('The tags to apply to the dev center')
 param tags object = {}
 
+@description('The principal id to add as a admin of the dev center')
 param principalId string = ''
 
 @secure()
 @description('The personal access token to use to access the catalog')
 param catalogToken string
+
+@description('The name of the log analytics workspace to send logs to')
+param logWorkspaceName string = ''
 
 type devCenterConfig = {
   projects: project[]
@@ -79,7 +80,8 @@ module devCenterProject 'project.bicep' = [for project in config.projects: {
     tags: tags
     devCenterName: devcenter.name
     environmentTypes: project.environmentTypes
-    members: [principalId]
+    projectAdminId: principalId
+    members: [ principalId ]
   }
 }]
 
@@ -112,11 +114,11 @@ module devCenterCatalog 'catalog.bicep' = [for catalog in config.catalogs: {
   }
 }]
 
-resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
+resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = if(!empty(logWorkspaceName)) {
   name: logWorkspaceName
 }
 
-resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if(!empty(logWorkspaceName)) {
   name: 'logs'
   scope: devcenter
   properties: {

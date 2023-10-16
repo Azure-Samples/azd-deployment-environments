@@ -1,4 +1,7 @@
 @description('The name of the dev center project')
+param devCenterName string
+
+@description('The name of the dev center project')
 param projectName string
 
 @description('The subscription id of the deployment target. If not specified, the current subscription is used')
@@ -18,6 +21,10 @@ param members string[] = []
 
 @description('The tags to assign to the environment type')
 param tags object = {}
+
+resource devCenter 'Microsoft.DevCenter/devcenters@2023-04-01' existing = {
+  name: devCenterName
+}
 
 resource project 'Microsoft.DevCenter/projects@2023-04-01' existing = {
   name: projectName
@@ -56,10 +63,24 @@ resource environmentType 'Microsoft.DevCenter/projects/environmentTypes@2023-04-
 
 var ownerRole = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')
 
-module subscriptionAccess 'subscription-access.bicep' = {
+// The devcenter principal requires owner access on the target subscription
+module devCenterSubscriptionAccess 'subscription-access.bicep' = {
+  name: '${devCenter.name}-subscription-access'
+  scope: subscription(subscriptionId)
+  params: {
+    name: guid(subscriptionId, devCenter.name, ownerRole, devCenter.identity.principalId)
+    principalId: devCenter.identity.principalId
+    roleDefinitionId: ownerRole
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// The environment type principal requires owner access on the target subscription
+module environmentTypeSubscriptionAccess 'subscription-access.bicep' = {
   name: 'subscription-access-${project.name}-${environmentType.name}'
   scope: subscription(subscriptionId)
   params: {
+    name: guid(subscriptionId, projectName, environmentType.name, ownerRole, environmentType.identity.principalId)
     principalId: environmentType.identity.principalId
     roleDefinitionId: ownerRole
     principalType: 'ServicePrincipal'

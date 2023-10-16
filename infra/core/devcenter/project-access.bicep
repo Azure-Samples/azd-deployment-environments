@@ -4,17 +4,18 @@ param projectName string
 @description('The principal id for the role assignment')
 param principalId string
 
-var deploymentEnvironmentsUser = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '18e40d4e-8d2e-438d-97e1-9528336e149c')
+@description('The principal role for the role assignment')
+param principalRole string
 
 resource project 'Microsoft.DevCenter/projects@2023-04-01' existing = {
   name: projectName
 }
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(project.name, deploymentEnvironmentsUser, principalId)
+  name: guid(project.name, principalRole, principalId)
   scope: project
   properties: {
     principalId: principalId
-    roleDefinitionId: deploymentEnvironmentsUser
+    roleDefinitionId: principalRole
   }
 }
