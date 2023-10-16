@@ -12,7 +12,7 @@ resource project 'Microsoft.DevCenter/projects@2023-04-01' existing = {
 }
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(project.name, principalRole, principalId)
+  name: guid(project.id, principalRole, principalId)
   scope: project
   properties: {
     principalId: principalId

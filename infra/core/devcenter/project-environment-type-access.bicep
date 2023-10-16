@@ -19,7 +19,7 @@ resource environmentType 'Microsoft.DevCenter/projects/environmentTypes@2023-04-
 }
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(project.name, environmentType.name, deploymentEnvironmentsUser, principalId)
+  name: guid(environmentType.id, deploymentEnvironmentsUser, principalId)
   scope: environmentType
   properties: {
     principalId: principalId

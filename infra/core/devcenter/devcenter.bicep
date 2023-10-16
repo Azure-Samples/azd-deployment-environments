@@ -64,7 +64,7 @@ resource devcenter 'Microsoft.DevCenter/devcenters@2023-04-01' = {
 }
 
 module devCenterEnvType 'devcenter-environment-type.bicep' = [for envType in config.environmentTypes: {
-  name: '${devcenter.name}-environment-type-${envType.name}'
+  name: '${deployment().name}-${envType.name}'
   params: {
     name: envType.name
     tags: empty(envType.tags) ? {} : envType.tags
@@ -73,7 +73,7 @@ module devCenterEnvType 'devcenter-environment-type.bicep' = [for envType in con
 }]
 
 module devCenterProject 'project.bicep' = [for project in config.projects: {
-  name: '${devcenter.name}-project-${project.name}'
+  name: '${deployment().name}-${project.name}'
   params: {
     name: project.name
     location: location
@@ -86,7 +86,7 @@ module devCenterProject 'project.bicep' = [for project in config.projects: {
 }]
 
 module devCenterKeyVaultAccess '../security/keyvault-access.bicep' = {
-  name: '${devcenter.name}-keyvault-access'
+  name: '${deployment().name}-keyvault-access'
   params: {
     keyVaultName: keyVaultName
     principalId: devcenter.identity.principalId
@@ -94,7 +94,7 @@ module devCenterKeyVaultAccess '../security/keyvault-access.bicep' = {
 }
 
 module catalogPatToken '../security/keyvault-secret.bicep' = {
-  name: '${devcenter.name}-catalog-token'
+  name: '${deployment().name}-catalog-token'
   params: {
     name: '${devcenter.name}-catalog-token'
     keyVaultName: keyVaultName
@@ -103,7 +103,7 @@ module catalogPatToken '../security/keyvault-secret.bicep' = {
 }
 
 module devCenterCatalog 'catalog.bicep' = [for catalog in config.catalogs: {
-  name: '${devcenter.name}-catalog-${catalog.name}'
+  name: '${deployment().name}-${catalog.name}'
   params: {
     devCenterName: devcenter.name
     name: catalog.name

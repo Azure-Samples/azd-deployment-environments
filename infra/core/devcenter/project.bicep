@@ -41,7 +41,7 @@ resource project 'Microsoft.DevCenter/projects@2023-04-01' = {
 }
 
 module projectEnvType 'project-environment-type.bicep' = [for envType in environmentTypes: {
-  name: '${project.name}-environment-type-${envType.name}'
+  name: '${deployment().name}-${envType.name}'
   params: {
     devCenterName: devCenterName
     projectName: project.name
@@ -58,7 +58,7 @@ var deploymentEnvironmentsUser = subscriptionResourceId('Microsoft.Authorization
 var projectAdmin = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '331c37c6-af14-46d9-b9f4-e1909e1b95a0')
 
 module memberAccess 'project-access.bicep' = [for member in members: {
-  name: '${project.name}-member-${member}'
+  name: '${deployment().name}-member-access-${uniqueString(project.name, member)}'
   params: {
     projectName: project.name
     principalId: member
@@ -67,7 +67,7 @@ module memberAccess 'project-access.bicep' = [for member in members: {
 }]
 
 module projectAdminAccess 'project-access.bicep' = if (!empty(projectAdminId)) {
-  name: '${project.name}-admin-${projectAdminId}'
+  name: '${deployment().name}-admin-access-${uniqueString(project.name, projectAdminId)}'
   params: {
     projectName: project.name
     principalId: projectAdminId

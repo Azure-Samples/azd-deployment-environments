@@ -65,10 +65,10 @@ var ownerRole = subscriptionResourceId('Microsoft.Authorization/roleDefinitions'
 
 // The devcenter principal requires owner access on the target subscription
 module devCenterSubscriptionAccess 'subscription-access.bicep' = {
-  name: '${devCenter.name}-subscription-access'
+  name: '${deployment().name}-devcenter-subscription-access'
   scope: subscription(subscriptionId)
   params: {
-    name: guid(subscriptionId, devCenter.name, ownerRole, devCenter.identity.principalId)
+    name: guid(devCenter.id, ownerRole, devCenter.identity.principalId)
     principalId: devCenter.identity.principalId
     roleDefinitionId: ownerRole
     principalType: 'ServicePrincipal'
@@ -77,10 +77,10 @@ module devCenterSubscriptionAccess 'subscription-access.bicep' = {
 
 // The environment type principal requires owner access on the target subscription
 module environmentTypeSubscriptionAccess 'subscription-access.bicep' = {
-  name: 'subscription-access-${project.name}-${environmentType.name}'
+  name: '${deployment().name}-subscription-access'
   scope: subscription(subscriptionId)
   params: {
-    name: guid(subscriptionId, projectName, environmentType.name, ownerRole, environmentType.identity.principalId)
+    name: guid(environmentType.id, ownerRole, environmentType.identity.principalId)
     principalId: environmentType.identity.principalId
     roleDefinitionId: ownerRole
     principalType: 'ServicePrincipal'
@@ -88,7 +88,7 @@ module environmentTypeSubscriptionAccess 'subscription-access.bicep' = {
 }
 
 module memberAccess 'project-environment-type-access.bicep' = [for member in members: {
-  name: '${project.name}-member-${member}'
+  name: '${deployment().name}-member-access-${uniqueString(project.name, environmentType.name, member)}'
   params: {
     projectName: project.name
     environmentTypeName: environmentType.name
