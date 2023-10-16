@@ -20,16 +20,19 @@ projects:
       - name: Dev
         deploymentTargetId: null
         roles: ["Owner"]
+        members: []
         tags:
           project: Project-1
       - name: Test
         deploymentTargetId: null
         roles: ["Contributor"]
+        members: []
         tags:
           project: Project-1
       - name: Prod
         deploymentTargetId: null
         roles: ["Reader"]
+        members: []
         tags:
           project: Project-1
   - name: Project-2
@@ -38,16 +41,19 @@ projects:
       - name: Dev
         deploymentTargetId: null
         roles: ["Owner"]
+        members: []
         tags:
           project: Project-2
       - name: Test
         deploymentTargetId: null
         roles: ["Contributor"]
+        members: []
         tags:
           project: Project-2
       - name: Prod
         deploymentTargetId: null
         roles: ["Reader"]
+        members: []
         tags:
           project: Project-2
   - name: Project-3
@@ -56,15 +62,18 @@ projects:
       - name: Dev
         deploymentTargetId: null
         roles: ["Owner"]
+        members: []
         tags:
           project: Project-3
       - name: Test
         deploymentTargetId: null
         roles: ["Contributor"]
+        members: []
         tags:
           project: Project-3
       - name: Prod
         deploymentTargetId: null
         roles: ["Reader"]
+        members: []
         tags:
           project: Project-3

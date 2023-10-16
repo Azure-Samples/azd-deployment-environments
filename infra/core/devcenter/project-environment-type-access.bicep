@@ -1,6 +1,9 @@
 @description('The name of the devcenter project')
 param projectName string
 
+@description('The name of the environment type')
+param environmentTypeName string
+
 @description('The principal id for the role assignment')
 param principalId string
 
@@ -10,9 +13,14 @@ resource project 'Microsoft.DevCenter/projects@2023-04-01' existing = {
   name: projectName
 }
 
+resource environmentType 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' existing = {
+  name: environmentTypeName
+  parent: project
+}
+
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(project.name, deploymentEnvironmentsUser, principalId)
-  scope: project
+  name: guid(project.name, environmentType.name, deploymentEnvironmentsUser, principalId)
+  scope: environmentType
   properties: {
     principalId: principalId
     roleDefinitionId: deploymentEnvironmentsUser

@@ -7,6 +7,7 @@ param name string
 @description('The environment types to create')
 param environmentTypes environmentType[]
 
+@description('The members to give access to the project')
 param members string[]
 
 @description('The location of the resource')
@@ -20,6 +21,7 @@ type environmentType = {
   deploymentTargetId: string?
   tags: object?
   roles: string[]?
+  members: string[]?
 }
 
 resource devcenter 'Microsoft.DevCenter/devcenters@2023-04-01' existing = {
@@ -44,6 +46,7 @@ module projectEnvType 'project-environment-type.bicep' = [for envType in environ
     location: location
     tags: envType.tags == null ? {} : envType.tags
     roles: envType.roles == null ? [] : envType.roles
+    members: envType.members == null ? [] : envType.members
   }
 }]
 
