@@ -17,10 +17,15 @@ param location string = resourceGroup().location
 param roles string[] = []
 
 @description('The members to give access to the project')
-param members string[] = []
+param members memberRoleAssignment[] = []
 
 @description('The tags to assign to the environment type')
 param tags object = {}
+
+type memberRoleAssignment = {
+  user: string
+  role: ('Deployment Environments User' | 'DevCenter Project Admin')
+}
 
 resource devCenter 'Microsoft.DevCenter/devcenters@2023-04-01' existing = {
   name: devCenterName
@@ -88,10 +93,11 @@ module environmentTypeSubscriptionAccess 'subscription-access.bicep' = {
 }
 
 module memberAccess 'project-environment-type-access.bicep' = [for member in members: {
-  name: '${deployment().name}-member-access-${uniqueString(project.name, environmentType.name, member)}'
+  name: '${deployment().name}-member-access-${uniqueString(project.name, environmentType.name, member.role, member.user)}'
   params: {
     projectName: project.name
     environmentTypeName: environmentType.name
-    principalId: member
+    principalId: member.user
+    role: member.role
   }
 }]

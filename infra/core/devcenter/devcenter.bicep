@@ -32,7 +32,7 @@ type devCenterConfig = {
 type project = {
   name: string
   environmentTypes: projectEnvironmentType[]
-  members: string[]?
+  members: memberRoleAssignment[]
 }
 
 type catalog = {
@@ -51,7 +51,13 @@ type projectEnvironmentType = {
   name: string
   deploymentTargetId: string?
   tags: object?
-  roles: string[]?
+  roles: string[]
+  members: memberRoleAssignment[]
+}
+
+type memberRoleAssignment = {
+  user: string
+  role: ('Deployment Environments User' | 'DevCenter Project Admin')
 }
 
 resource devcenter 'Microsoft.DevCenter/devcenters@2023-04-01' = {
@@ -72,6 +78,12 @@ module devCenterEnvType 'devcenter-environment-type.bicep' = [for envType in con
   }
 }]
 
+// Default to current principal id to have Project Admin role
+var defaultProjectRoleAssignments = {
+  user: principalId
+  role: 'DevCenter Project Admin'
+}
+
 module devCenterProject 'project.bicep' = [for project in config.projects: {
   name: '${deployment().name}-${project.name}'
   params: {
@@ -80,8 +92,7 @@ module devCenterProject 'project.bicep' = [for project in config.projects: {
     tags: tags
     devCenterName: devcenter.name
     environmentTypes: project.environmentTypes
-    projectAdminId: principalId
-    members: [ principalId ]
+    members: !empty(project.members) ? project.members : [ defaultProjectRoleAssignments ]
   }
 }]
 
@@ -114,11 +125,11 @@ module devCenterCatalog 'catalog.bicep' = [for catalog in config.catalogs: {
   }
 }]
 
-resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = if(!empty(logWorkspaceName)) {
+resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = if (!empty(logWorkspaceName)) {
   name: logWorkspaceName
 }
 
-resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if(!empty(logWorkspaceName)) {
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (!empty(logWorkspaceName)) {
   name: 'logs'
   scope: devcenter
   properties: {
