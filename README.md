@@ -14,18 +14,19 @@ A deployment environment is a preconfigured collection of Azure resources deploy
 
 With Azure Deployment Environments, your platform engineers can enforce enterprise security policies and provide a curated set of predefined infrastructure as code (IaC) templates. Your developers will use those templates to deploy environments on demand in a self-service manner.
 
-> Note: Azure Deployment Environments currently supports only Azure Resource Manager (ARM) templates and Terraform (Private Preview).
+> [!NOTE]
+> Azure Deployment Environments currently supports only Azure Resource Manager (ARM) templates and Terraform (Private Preview).
 
 This repo will deploy several Azure resources and configure DevCenter to let you start exploring Azure Deployment Environments. The following resources will be deployed:
 
 - A resource group
 - An Azure DevCenter resource
 - An Azure Key Vault resource to store the GitHub token to connect to the catalog
-- Sample DevCenter environment types (development, sandbox, etc.)
-- Sample DevCenter projects (Team-one, Team-two, etc.)
-- Projects environment types definitions (development, sandbox)
+- Sample DevCenter environment types (dev, test, prod, etc.)
+- Sample DevCenter projects (Project-1, Project-2, etc.)
+- Projects environment types definitions (dev, test, prod, etc.)
 
-The projects and environments defined serve as inspiration to start using Azure Deployment Environments, you can delete them and create your own.
+The projects and environments defined serve as inspiration to start using Azure Deployment Environments, you can modify the DevCenter configuration at `./infra/devcener.yaml`.
 
 All azure resources are defined as code using Bicep, the environment definition can be found in the `infra` folder.
 
@@ -35,15 +36,24 @@ Let's get started!
 
 Make sure you have the following tools installed:
 
-1. [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-2. [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/)
-4. An Azure subscription with at least `Owner` RBAC role assigned to the deployment identity
+1. [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/)
+1. An Azure subscription with at least `Owner` RBAC role assigned to the deployment identity
 
 ## Deploy with Azure Developer CLI
 
-> Note: Before starting, create a GitHub PAT with `repo` scope to connect to a GitHub repository as a catalog. Learn more about [creating a GitHub PAT](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+### Confirm your Dev Center configuration
+
+This template includes a deventer configuration file at `~./infra/devcenter.yaml`.
+Modify the environment types, projects, catalogs and role mappings to meet your desired requirements.
+
+### Setup GitHub Personal Access Token (PAT)
 
 1. Define the following environment variables which will be used to link a GitHub repository as a DevCenter catalog. A catalog is the repository that contains the environment definitions as infrastructure as code templates. Use the [Azure official repo for Azure Deployment Environments](https://github.com/Azure/deployment-environments) to import sample environments.
+
+> [!NOTE]
+> Before starting, create a GitHub PAT with `repo` scope to connect to a GitHub repository as a catalog. Learn more about [creating a GitHub PAT](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+>
+> If the `GITHUB_TOKEN` environment variable is not set `azd` will automatically prompt for a value during provisioning.
 
 ```bash
 # Bash
