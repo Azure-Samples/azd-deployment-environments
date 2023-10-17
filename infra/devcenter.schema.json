@@ -73,7 +73,7 @@
                 "tags": {
                     "type": "object",
                     "additionalProperties": true,
-                    "title": "The tags to apply to automatically applied to deployed environments"
+                    "title": "The tags to automatically apply to deployed environments"
                 }
             }
         },
@@ -145,7 +145,7 @@
                 },
                 "tags": {
                     "type": "object",
-                    "title": "The tags to apply to automatically apply to deployed environments",
+                    "title": "The tags to automatically apply to deployed environments",
                     "additionalProperties": true
                 }
             }
@@ -165,7 +165,7 @@
                     "type": "string",
                     "title": "The role to assign to the user",
                     "enum": [
-                        "Deployments Environment User",
+                        "Deployment Environments User",
                         "DevCenter Project Admin"
                     ]
                 }
