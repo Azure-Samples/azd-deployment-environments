@@ -1,0 +1,175 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "type": "object",
+    "title": "The DevCenter configuration",
+    "required": [
+        "catalogs",
+        "environmentTypes",
+        "projects"
+    ],
+    "properties": {
+        "catalogs": {
+            "type": "array",
+            "minItems": 1,
+            "title": "The catalogs for the DevCenter instance",
+            "items": {
+                "$ref": "#/definitions/catalog"
+            }
+        },
+        "environmentTypes": {
+            "type": "array",
+            "minItems": 1,
+            "title": "The allowed environment types for the DevCenter instance",
+            "items": {
+                "$ref": "#/definitions/devCenterEnvironmentType"
+            }
+        },
+        "projects": {
+            "type": "array",
+            "minItems": 1,
+            "title": "The projects in the DevCenter instance",
+            "items": {
+                "$ref": "#/definitions/project"
+            }
+        }
+    },
+    "definitions": {
+        "project": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "title": "The name of the project"
+                },
+                "environmentTypes": {
+                    "type": "array",
+                    "title": "The environment types for the project",
+                    "description": "The environment types must be defined in the environmentTypes section of the DevCenter configuration file.",
+                    "items": {
+                        "$ref": "#/definitions/projectEnvironmentType"
+                    }
+                },
+                "members": {
+                    "type": "array",
+                    "title": "The users that have access to the project and their specified role",
+                    "description": "If an empty array is specified, the deployment user will be assigned the DevCenter Project Admin role.",
+                    "items": {
+                        "$ref": "#/definitions/roleAssignment"
+                    }
+                }
+            }
+        },
+        "devCenterEnvironmentType": {
+            "type": "object",
+            "required": [
+                "name",
+                "tags"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "title": "The name of the environment type"
+                },
+                "tags": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "title": "The tags to apply to automatically applied to deployed environments"
+                }
+            }
+        },
+        "catalog": {
+            "type": "object",
+            "required": [
+                "name",
+                "repo",
+                "branch",
+                "path"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "title": "The name of the catalog"
+                },
+                "repo": {
+                    "type": "string",
+                    "title": "The repository url of the catalog"
+                },
+                "branch": {
+                    "type": "string",
+                    "title": "The branch of the catalog to use",
+                    "default": "main"
+                },
+                "path": {
+                    "type": "string",
+                    "title": "The path in the repository to the catalog",
+                    "default": "/Environments"
+                }
+            }
+        },
+        "projectEnvironmentType": {
+            "type": "object",
+            "required": [
+                "name",
+                "deploymentTargetId",
+                "roles",
+                "members"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "title": "The name of the environment type"
+                },
+                "deploymentTargetId": {
+                    "type": "string",
+                    "title": "The Azure subscription id to deploy environments"
+                },
+                "roles": {
+                    "type": "array",
+                    "title": "The roles that will assigned to to the deployment environment creator.",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Owner",
+                            "Contributor",
+                            "Reader"
+                        ]
+                    }
+                },
+                "members": {
+                    "type": "array",
+                    "title": "The users that have access to the environment type and their specified role",
+                    "items": {
+                        "$ref": "#/definitions/roleAssignment"
+                    }
+                },
+                "tags": {
+                    "type": "object",
+                    "title": "The tags to apply to automatically apply to deployed environments",
+                    "additionalProperties": true
+                }
+            }
+        },
+        "roleAssignment": {
+            "type": "object",
+            "required": [
+                "user",
+                "role"
+            ],
+            "properties": {
+                "user": {
+                    "type": "string",
+                    "title": "The user Azure principal id (GUID)"
+                },
+                "role": {
+                    "type": "string",
+                    "title": "The role to assign to the user",
+                    "enum": [
+                        "Deployments Environment User",
+                        "DevCenter Project Admin"
+                    ]
+                }
+            }
+        }
+    }
+}
