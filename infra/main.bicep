@@ -44,14 +44,15 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   tags: tags
 }
 
+var devCenterConfig = loadYamlContent('./devcenter.yaml')
 module devcenter 'core/devcenter/devcenter.bicep' = {
   name: 'devcenter'
   scope: rg
   params: {
-    name: !empty(devCenterName) ? devCenterName : 'dc-${resourceToken}'
+    name: !empty(devCenterName) ? devCenterName : 'dc-${devCenterConfig.orgName}'
     location: location
     tags: tags
-    config: loadYamlContent('./devcenter.yaml')
+    config: devCenterConfig
     catalogToken: catalogToken
     keyVaultName: keyVault.outputs.name
     logWorkspaceName: logging.outputs.name

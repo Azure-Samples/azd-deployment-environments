@@ -24,6 +24,7 @@ param catalogToken string
 param logWorkspaceName string = ''
 
 type devCenterConfig = {
+  orgName: string
   projects: project[]
   catalogs: catalog[]
   environmentTypes: devCenterEnvironmentType[]

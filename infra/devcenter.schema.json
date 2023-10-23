@@ -2,12 +2,18 @@
     "$schema": "https://json-schema.org/draft/2019-09/schema",
     "type": "object",
     "title": "The DevCenter configuration",
+    "additionalProperties": false,
     "required": [
+        "orgName",
         "catalogs",
         "environmentTypes",
         "projects"
     ],
     "properties": {
+        "orgName": {
+            "type": "string",
+            "title": "The name of the organization / business group that owns the DevCenter instance"
+        },
         "catalogs": {
             "type": "array",
             "minItems": 1,

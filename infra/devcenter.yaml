@@ -1,5 +1,6 @@
 # yaml-language-server: $schema=./devcenter.schema.json
 
+orgName: contoso
 environmentTypes:
   - name: Dev
     tags:
