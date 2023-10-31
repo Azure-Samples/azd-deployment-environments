@@ -16,7 +16,7 @@ param logWorkspaceName string = ''
 
 @secure()
 @description('Token used to access the catalog')
-param catalogToken string
+param catalogToken string = ''
 
 @minLength(1)
 @description('Primary location for all resources')
@@ -49,18 +49,18 @@ module devcenter 'core/devcenter/devcenter.bicep' = {
   name: 'devcenter'
   scope: rg
   params: {
-    name: !empty(devCenterName) ? devCenterName : 'dc-${devCenterConfig.orgName}'
+    name: !empty(devCenterName) ? devCenterName : 'dc-${devCenterConfig.orgName}-${resourceToken}'
     location: location
     tags: tags
     config: devCenterConfig
     catalogToken: catalogToken
-    keyVaultName: keyVault.outputs.name
+    keyVaultName: !empty(catalogToken) ? keyVault.outputs.name : ''
     logWorkspaceName: logging.outputs.name
     principalId: principalId
   }
 }
 
-module keyVault './core/security/keyvault.bicep' = {
+module keyVault './core/security/keyvault.bicep' = if (!empty(catalogToken)) {
   name: 'keyvault'
   scope: rg
   params: {

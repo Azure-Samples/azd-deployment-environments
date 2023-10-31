@@ -1,9 +1,6 @@
 @description('The dev center name')
 param name string
 
-@description('The name of the key vault to store secrets in')
-param keyVaultName string
-
 @description('The location to deploy the dev center to')
 param location string = resourceGroup().location
 
@@ -16,9 +13,14 @@ param tags object = {}
 @description('The principal id to add as a admin of the dev center')
 param principalId string = ''
 
+@description('The name of the key vault to store secrets in')
+param keyVaultName string = ''
+
 @secure()
 @description('The personal access token to use to access the catalog')
-param catalogToken string
+param catalogToken string = ''
+
+param catalogSecretIdentifier string = ''
 
 @description('The name of the log analytics workspace to send logs to')
 param logWorkspaceName string = ''
@@ -41,6 +43,7 @@ type catalog = {
   repo: string
   branch: string?
   path: string?
+  secretIdentifier: string?
 }
 
 type devCenterEnvironmentType = {
@@ -97,7 +100,7 @@ module devCenterProject 'project.bicep' = [for project in config.projects: {
   }
 }]
 
-module devCenterKeyVaultAccess '../security/keyvault-access.bicep' = {
+module devCenterKeyVaultAccess '../security/keyvault-access.bicep' = if (!empty(keyVaultName)) {
   name: '${deployment().name}-keyvault-access'
   params: {
     keyVaultName: keyVaultName
@@ -105,24 +108,17 @@ module devCenterKeyVaultAccess '../security/keyvault-access.bicep' = {
   }
 }
 
-module catalogPatToken '../security/keyvault-secret.bicep' = {
-  name: '${deployment().name}-catalog-token'
-  params: {
-    name: '${devcenter.name}-catalog-token'
-    keyVaultName: keyVaultName
-    secretValue: catalogToken
-  }
-}
-
 module devCenterCatalog 'catalog.bicep' = [for catalog in config.catalogs: {
   name: '${deployment().name}-${catalog.name}'
   params: {
     devCenterName: devcenter.name
+    keyVaultName: keyVaultName
     name: catalog.name
     repoUri: catalog.repo
     branch: catalog.branch
     path: catalog.path
-    secretPatIdentifier: catalogPatToken.outputs.secretUri
+    patToken: catalogToken
+    secretIdentifier: catalog.secretIdentifier
   }
 }]
 

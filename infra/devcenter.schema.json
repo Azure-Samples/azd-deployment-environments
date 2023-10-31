@@ -89,7 +89,8 @@
                 "name",
                 "repo",
                 "branch",
-                "path"
+                "path",
+                "secretIdentifier"
             ],
             "properties": {
                 "name": {
@@ -109,6 +110,10 @@
                     "type": "string",
                     "title": "The path in the repository to the catalog",
                     "default": "/Environments"
+                },
+                "secretIdentifier": {
+                    "type": "string",
+                    "title": "The keyvault secret identifier for the catalog PAT token"
                 }
             }
         },

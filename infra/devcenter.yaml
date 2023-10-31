@@ -13,9 +13,10 @@ environmentTypes:
       env: prod
 catalogs:
   - name: Example
-    repo: https://github.com/Azure/deployment-environments.git
+    repo: https://github.com/microsoft/devcenter-catalog.git
     branch: main
     path: /Environments
+    secretIdentifier: ""
 projects:
   - name: Project-1
     members: []
