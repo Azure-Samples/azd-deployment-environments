@@ -15,7 +15,7 @@ catalogs:
   - name: Example
     repo: https://github.com/microsoft/devcenter-catalog.git
     branch: main
-    path: /Environments
+    path: /EnvironmentDefinitions
     secretIdentifier: ""
 projects:
   - name: Project-1
