@@ -36,7 +36,7 @@ Let's get started!
 
 Make sure you have the following tools installed:
 
-1. [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/)
+1. [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/)
 1. An Azure subscription with at least `Owner` RBAC role assigned to the deployment identity
 
 ## Deploy with Azure Developer CLI
@@ -45,15 +45,38 @@ Make sure you have the following tools installed:
 
 This template includes a deventer configuration file at `~./infra/devcenter.yaml`.
 Modify the environment types, projects, catalogs and role mappings to meet your desired requirements.
+Learn more about Azure Deployment environments from the [official docs](https://learn.microsoft.com/azure/deployment-environments/overview-what-is-azure-deployment-environments).
+
+#### Catalogs
+
+Catalogs are a set of manifests that describe the environment definitions that are able to be deployed by developers.
+They include a manifest plus infrastructure as code (IaC) templates.
+
+By default this template is pre-configured to use a default quick start catalog that does not require any authentication. When customizing using your own catalogs you will be required to setup a Github PAT token (see below).
+
+#### Dev Center Environment Types
+
+Dev Center Environment types that are configured at the Dev Center provide a complete list of all the environment types required within your organization.
+Common examples could be `Dev`, `Test` and `Prod` but may be different in your organization.
+
+#### Projects
+
+Dev Center projects allow your organization to provide granular deployment configuration to dev teams and product teams within your organization.
+
+#### Project Environment Types
+
+Project environment types within a project specify which of the Dev Center environment types are available to each project. For example, internal project teams may not have access to deploy `Prod` environment types.
 
 ### Setup GitHub Personal Access Token (PAT)
 
-1. Define the following environment variables which will be used to link a GitHub repository as a DevCenter catalog. A catalog is the repository that contains the environment definitions as infrastructure as code templates. Use the [Azure official repo for Azure Deployment Environments](https://github.com/Azure/deployment-environments) to import sample environments.
+When using a custom catalogs you will need to use a GitHub PAT for authentication.
+
+1. Define the following environment variables which will be used to link a GitHub repository as a DevCenter catalog. A catalog is the repository that contains the environment definitions as infrastructure as code templates. Use the [Azure official repo for Azure Deployment Environments](https://github.com/microsoft/devcenter-catalog) to import sample environments definitions.
 
 > [!NOTE]
 > Before starting, create a GitHub PAT with `repo` scope to connect to a GitHub repository as a catalog. Learn more about [creating a GitHub PAT](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 >
-> If the `GITHUB_TOKEN` environment variable is not set `azd` will automatically prompt for a value during provisioning.
+> If the `GITHUB_TOKEN` environment variable is not set `azd` will default to the pre-configured quick start catalog.
 
 ```bash
 # Bash
