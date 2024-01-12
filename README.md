@@ -1,3 +1,17 @@
+---
+page_type: sample
+languages:
+- azdeveloper
+- bicep
+products:
+- azure
+- deployment-environments
+urlFragment: azd-deployment-environments
+name: Bicep template to bootstrap Azure Deployment Environments
+description: An Azd template to help bootstrap an Azure Dev Center with support for Deployment environments.
+---
+<!-- YAML front-matter schema: https://review.learn.microsoft.com/en-us/help/contribute/samples/process/onboarding?branch=main#supported-metadata-fields-for-readmemd -->
+
 # Bicep template to bootstrap Azure Deployment Environments
 
 Azure Deployment Environments empowers development teams to quickly and easily spin up app infrastructure with project-based templates that establish consistency and best practices while maximizing security. This on-demand access to secure environments accelerates the stages of the software development lifecycle in a compliant and cost-efficient way.
