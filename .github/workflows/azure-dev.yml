@@ -26,10 +26,10 @@ jobs:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
 
       - name: Install azd
-        uses: Azure/setup-azd@v0.1.0
+        uses: Azure/setup-azd@f92cb99339bd7bc4a778b60e698111e80b2223db # v0.1.0
 
       - name: Log in with Azure (Federated Credentials)
         if: ${{ env.AZURE_CLIENT_ID != '' }}
