@@ -5,7 +5,6 @@ languages:
 - bicep
 products:
 - azure
-- deployment-environments
 urlFragment: azd-deployment-environments
 name: Bicep template to bootstrap Azure Deployment Environments
 description: An Azd template to help bootstrap an Azure Dev Center with support for Deployment environments.
